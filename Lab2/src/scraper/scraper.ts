@@ -1,12 +1,12 @@
 import { INTERVAL_SECONDS, RSS_URI } from "./config.js";
 import Parser from "rss-parser";
-import { IRssWriter } from "./writers/rss-writer.iface.js";
+import { IFeedItemWriter } from "../shared/writers/feed-item-writer.iface.js";
 
 export class Scraper {
   private parser : Parser = new Parser();
-  private rssWriter : IRssWriter;
+  private rssWriter : IFeedItemWriter;
 
-  constructor(rssWriter : IRssWriter) {
+  constructor(rssWriter : IFeedItemWriter) {
     this.rssWriter = rssWriter;
   }
   
