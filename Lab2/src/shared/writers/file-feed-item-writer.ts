@@ -10,9 +10,8 @@ export class FileFeedItemWriter implements IFeedItemWriter {
     this.directoryPath = directoryPath ?? OUTPUT_DIRECTORY;
   }
 
-  export(item : Item) {
-    const pubDate = Date.parse(item.isoDate);
-    const filePath = `${this.directoryPath}/${pubDate}`;
+  write(id : string, item : Item) {
+    const filePath = `${this.directoryPath}/${id}`;
    
     if (fs.existsSync(filePath))
       return;

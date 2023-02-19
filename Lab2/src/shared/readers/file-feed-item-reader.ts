@@ -10,7 +10,7 @@ export class FileFeedItemReader implements IFeedItemReader {
     this.directoryPath = directoryPath ?? OUTPUT_DIRECTORY;
   }
   
-  enumerateItems() : Iterable<Item> {
+  enumerateIds() : Iterable<string> {
     const dir = fs.opendirSync(this.directoryPath);
     return enumerateInternal();
 
@@ -21,11 +21,16 @@ export class FileFeedItemReader implements IFeedItemReader {
         if (!nextEntry.isFile())
           continue;
 
-        const feedItemJson = fs.readFileSync(`${dir.path}/${nextEntry.name}`).toString("utf-8");
-        yield JSON.parse(feedItemJson);
+        yield nextEntry.name;
       }
 
       dir.close();
     }
+  }
+
+  read(id : string): Item {
+    const dir = fs.opendirSync(this.directoryPath);
+    const filename = `${dir}/${id}`;
+    return JSON.parse(fs.readFileSync(filename).toString("utf-8"));
   }
 }

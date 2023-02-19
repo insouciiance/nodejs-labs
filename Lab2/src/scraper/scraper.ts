@@ -13,7 +13,10 @@ export class Scraper {
   run() {
     setInterval(() => {
       this.parser.parseURL(RSS_URI).then(feed => {
-        feed.items.forEach(item => this.rssWriter.export(item))
+        feed.items.forEach(item => {
+          const itemId = Date.parse(item.isoDate).toString();
+          this.rssWriter.write(itemId, item);
+        })
       });
     }, INTERVAL_SECONDS * 1000);
   }
