@@ -30,7 +30,9 @@ export class FileFeedItemReader implements IFeedItemReader {
 
   read(id : string): Item {
     const dir = fs.opendirSync(this.directoryPath);
-    const filename = `${dir}/${id}`;
-    return JSON.parse(fs.readFileSync(filename).toString("utf-8"));
+    const filename = `${dir.path}/${id}`;
+    const content = JSON.parse(fs.readFileSync(filename).toString("utf-8"));
+    dir.close();
+    return content;
   }
 }
