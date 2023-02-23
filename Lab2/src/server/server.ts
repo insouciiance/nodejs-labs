@@ -21,10 +21,18 @@ export class Server {
             }
             if (req.url.startsWith('/news/')) {
                 const q = url.parse(req.url, true);
-                res.writeHead(200, { 'Content-Type': 'application/json' });
                 const path = q.pathname.split('/')
-                res.write(JSON.stringify(fileReader.read(path.pop())));
-                return res.end();
+                try {
+                    const data = JSON.stringify(fileReader.read(path.pop()));
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.write(data);
+                    return res.end();
+                } catch (err) {
+                    console.error(err);
+                    res.statusCode = 500; 
+                    res.setHeader('Content-Type', 'text/plain');
+                    return res.end('An error occurred while opening the directory');
+                }
             }
             res.statusCode = 404;
             res.end('Not found');
