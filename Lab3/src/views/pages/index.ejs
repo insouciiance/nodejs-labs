@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('../partials/head'); %>
+  <link rel="stylesheet" href="/styles/index/index.css">
+</head>
+<body>
+
+<header>
+  <%- include('../partials/header'); %>
+</header>
+
+<main>
+  <div class="mainDiv">
+    <h1>Перелік задач</h1>
+
+    <ul>
+      <% if(tasksList.length>0){ %>
+        <%for(let i=0;i<tasksList.length;i++){ %>
+          <li> <%- tasksList[i].getInfo() %></li> 
+          <% } %>
+      <% } else{%>
+        <p> Поки немає задач.</p>
+      <% }%>
+    </ul>
+  </div>
+</main>
+
+<footer>
+  <%- include('../partials/footer'); %>
+</footer>
+
+</body>
+</html>
