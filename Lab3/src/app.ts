@@ -2,6 +2,8 @@ import express, {Express, Request, Response} from 'express';
 import {Task} from '../src/entities/task'
 import { Priority } from './enums/priority';
 import { tasksList } from './storage/data';
+import bodyParser from 'body-parser'
+
 const app: Express = express()
 
 app.set('view engine', 'ejs')
@@ -9,6 +11,7 @@ app.set('views', 'src/views/pages')
 app.use(express.urlencoded({extended: true})); 
 app.use(express.json());   
 app.use(express.static('public'));
+app.use(bodyParser.json());
 
 app.get('/',function(req: Request, res:Response){
     res.render('index', {tasksList: tasksList});
@@ -25,6 +28,12 @@ app.post('/create',function(req: Request, res:Response){
     res.status(201);
     res.redirect("/");
 });
+
+app.post('/deleteTask', (req: Request, res: Response) => {
+    const { index } = req.body;
+    tasksList.splice(index, 1);
+    res.sendStatus(200);
+  });
 
 app.listen(8080, () =>{
     console.log("Server is listening on port 8080" )

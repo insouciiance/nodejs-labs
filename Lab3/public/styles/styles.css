@@ -1,3 +1,18 @@
 body{
-    font-family:Arial, Helvetica, sans-serif
+    font-family:Arial, Helvetica, sans-serif;
+    max-width: 60%;
+    margin:0 auto;
+}
+button:hover{
+    cursor: pointer;
+}
+button{
+    border: 0;
+    border-radius: 5px;
+    padding: 5px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 2px 5px 0 rgba(0, 0, 0, 0.19);
+}
+ul{
+    list-style-type: none; 
+    padding-inline-start:0;
 }
