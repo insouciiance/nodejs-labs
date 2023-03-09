@@ -23,6 +23,8 @@ app.get('/create',function(req: Request, res:Response){
 
 app.post('/create',function(req: Request, res:Response){
     const taskText: string = req.body.taskText;
+    const priority: number = req.body.priority;
+    console.log(priority)
     const newTask: Task = new Task(taskText, Priority.Low, new Date());
     tasksList.push(newTask);
     res.status(201);

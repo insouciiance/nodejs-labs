@@ -14,7 +14,6 @@
 
 <script>
   function deleteElement(index) {
-    console.log(index)
     axios.post('/deleteTask', { index })
       .then(response => {
         console.log("Array updated successfully!");
@@ -28,7 +27,6 @@
   }
 
   function tickElement(index) {
-    console.log(index);
     axios.post('/tickTask', { index })
       .then(response => {
         console.log("Array updated successfully!");
@@ -45,13 +43,26 @@
 <main>
   <div class="mainDiv">
     <h1>Перелік задач</h1>
-
     <ul>
       <% if(tasksList.length>0){ %>
         <%for(let i=0;i<tasksList.length;i++){ %>
           <li class="task" >
             <p class="taskText"> <%- tasksList[i].text %></p>
-            <p class="taskPriority"> Пріоритет: <%- tasksList[i].priority %></p>
+            <p class="taskPriority"> Пріоритет: 
+              <% switch(tasksList[i].priority) {
+                case 0: %>
+                    Низький
+                <% break;
+                case 1: %>
+                    Середній
+                <% break;
+                case 2: %>
+                    Високий
+                <% break;
+                default: %>
+                    Не визначено
+                <% } %>
+          </p>
             <p class="taskDate"> Дата створення: <%- tasksList[i].date.toLocaleString() %></p>
             <div>
               <button class="deleteButton" onclick="deleteElement(<%- i %>)">Видалити</button>
