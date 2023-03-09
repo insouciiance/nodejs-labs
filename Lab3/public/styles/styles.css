@@ -24,14 +24,14 @@ label {
     margin-left: 10px;
 }
 
-.confirmButton {
+.saveButton {
     background-color: rgb(236, 203, 140);
     height: 40px;
 }
 
 select {
     height: 40px;
-    width: 100px;
+    width: 200px;
     top: 0;
     cursor: pointer;
     border-radius: 5px;
