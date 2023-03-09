@@ -13,15 +13,16 @@
 
 <main>
   <div class="mainDiv">
-    <h1>Створення задачі</h1>
-    <form action="" method="post">
-      <input type="text" placeholder="Текст завдання" name = "taskText">
+    <h1><% if(model){ %>Редагування<% } else{ %>Створення<% } %> задачі</h1>
+    <form action="/create" method="post">
+      <input type="hidden" name="id" value="<%- model?.id || '' %>">
+      <input type="text" value="<%- model?.text || ''%>" placeholder="Текст завдання" name = "taskText">
       <select name="priority">
-        <option value="0">Низький</option>
-        <option value="1">Середній</option>
-        <option value="2">Високий</option>
+        <% for(let i = 0; i < priorities.length; i += 1) { %>
+          <option <%= priorities[i].value === model?.priority ? "selected" : "" %> value="<%- priorities[i].value %>"><%- priorities[i].name %></option>
+        <% } %>
       </select>
-      <button type="submit">Додати завдання</button>
+      <button type="submit">Зберегти</button>
     </form>
   </div>
 </main>

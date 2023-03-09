@@ -1,15 +1,23 @@
+import crypto from 'crypto'; 
 import { Priority } from '../enums/priority'
 
+
 export class Task {
+    private _id: string;
     private _text: string;
     private _priority: Priority;
-    private _date: Date
+    private _date: Date;
     private _isDone: boolean = false;
 
     constructor(text: string, priority: Priority, date: Date) {
+        this._id = crypto.randomUUID();
         this._text = text;
         this._priority = priority;
         this._date = date;
+    }
+
+    get id(): string {
+        return this._id;
     }
 
     get text(): string {

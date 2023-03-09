@@ -15,8 +15,9 @@
 
 
   <script>
-    function deleteElement(index) {
-      axios.post('/deleteTask', { index })
+    function deleteElement(id) {
+      console.log(id)
+      axios.post('/deleteTask', { id })
         .then(response => {
           console.log("Array updated successfully!");
         })
@@ -28,28 +29,9 @@
         });
     }
 
-    function tickElement(index) {
-      axios.post('/tickTask', { index })
-        .then(response => {
-          console.log("Array updated successfully!");
-        })
-        .catch(error => {
-          console.error("Error updating array!", error);
-        })
-        .finally(res => {
-          window.location.href = "/";
-        });
-    }
+    function tickElement(id) {
 
-    function openEditModal(taskId) {
-      const modal = document.getElementById(`edit-modal-${taskId}`);
-      modal.style.display = 'block';
-    }
-
-    function updateElement(id) {
-      const newText = document.getElementById(`newText-${id}`).value;
-      console.log('here', newText)
-      axios.put(`/tasks/${id}`, { newText })
+      axios.post('/tickTask', { id })
         .then(response => {
           console.log("Array updated successfully!");
         })
@@ -65,14 +47,12 @@
   <main>
     <div class="mainDiv">
       <h1>Перелік задач</h1>
-      <form method="POST" action="/tasks">
-        <label for="sortSelect">Сортувати за</label>
-        <select name="byField" id="sortSelect">
-          <option value="date">Датою</option>
-          <option value="priority">Пріоритетом</option>
-        </select>
-        <button class="confirmButton" type="submit">Застосувати</button>
-      </form>
+      <select onchange="location = this.value;">
+        <% Object.keys(sortOptions).forEach((key)=> { %>
+          <option <%=key===sort ? "selected" : "" %> value="?sort=<%- key %>"><%- sortOptions[key] %>
+          </option>
+          <% }); %>
+      </select>
       <ul>
         <% if(tasksList.length>0){ %>
           <%for(let i=0;i<tasksList.length;i++){ %>
@@ -81,29 +61,32 @@
                 <%- tasksList[i].text %>
               </p>
               <p class="taskPriority"> Пріоритет:
-                <% switch(tasksList[i].priority) { case 0: %>
-                  Низький
-                  <% break; case 1: %>
-                    Середній
-                    <% break; case 2: %>
-                      Високий
-                      <% break; default: %>
+                <% const priority = Number(tasksList[i].priority) %>
+                <p class="taskPriority"> Пріоритет: 
+                  <% switch(priority) {
+                    case 0: %>
+                        Низький
+                    <% break;
+                    case 1: %>
+                        Середній
+                    <% break;
+                    case 2: %>
+                        Високий
+                    <% break;
+                    default: %>
                         Не визначено
-                        <% } %>
+                    <% } %>
+              </p>
+              </p>
               </p>
               <p class="taskDate"> Дата створення: <%- tasksList[i].date.toLocaleString() %>
               </p>
               <div>
-                <button class="deleteButton" onclick="deleteElement(<%- i %>)">Видалити</button>
-                <input type="checkbox" onchange="tickElement(<%- i %>)" <%=tasksList[i].isDone ? "checked" : "" %> />
+                <a href="/edit/<%- tasksList[i].id %>"><button class="editButton">Редагувати</button></a>
+                <button class="deleteButton" onclick="deleteElement(`<%- tasksList[i].id %>`)">Видалити</button>
+                <input type="checkbox" onchange="tickElement(`<%- tasksList[i].id %>`)" <%=tasksList[i].isDone
+                  ? "checked" : "" %> />
               </div>
-              <div id="edit-modal-<%= i %>" style="display:none;">
-                <form>
-                  <input type="text" id="newText-<%= i %>" value="<%= tasksList[i].text %>">
-                  <button onclick="updateElement(<%- i %>)">Зберегти</button>
-                </form>
-              </div>
-              <button onclick="openEditModal(<%= i %>)">Редагувати</button>
             </li>
             <% } %>
               <% } else{%>
@@ -112,6 +95,10 @@
       </ul>
     </div>
   </main>
+
+  <footer>
+    <%- include('../partials/footer'); %>
+  </footer>
 
   <footer>
     <%- include('../partials/footer'); %>
