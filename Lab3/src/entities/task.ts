@@ -7,6 +7,7 @@ export class Task {
     private _isDone: boolean = false;
 
     constructor(text: string, priority: Priority, date: Date) {
+        console.log('type',typeof(priority))
         this._text = text;
         this._priority = priority;
         this._date = date;
