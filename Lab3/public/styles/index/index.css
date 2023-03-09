@@ -15,3 +15,7 @@ h1{
 .deleteButton{
     background-color: rgb(247, 139, 139);
 }
+
+.editButton{
+    background-color: lightgoldenrodyellow;
+}

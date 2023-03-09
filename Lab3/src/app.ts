@@ -1,8 +1,8 @@
 import express, {Express, Request, Response} from 'express';
 import {Task} from '../src/entities/task'
-import { Priority } from './enums/priority';
+import { Priority, priorities } from './enums/priority';
 import { tasksList } from './storage/data';
-import bodyParser from 'body-parser'
+import bodyParser from 'body-parser';
 
 const app: Express = express()
 
@@ -14,17 +14,56 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 
 app.get('/',function(req: Request, res:Response){
-    res.render('index', {tasksList: tasksList});
+    const tasks = [...tasksList];
+
+    const sortOptions = {
+        date: 'Дата створення',
+        priority: 'Пріоритет'
+    };
+
+    const sort: string = req.query.sort as string || Object.keys(sortOptions)[0];
+    tasks.sort((a,b) => a[sort] - b[sort]);
+    
+    res.render('index', {tasksList: tasks, sortOptions, sort});
 });
 
 app.get('/create',function(req: Request, res:Response){
-    res.render('create');
+    res.render('create', { model: null, priorities });
+});
+
+app.get('/edit/:id',function(req: Request, res:Response){
+    const match = tasksList.find(x => x.id === req.params.id);
+    
+    if(!match){
+        return res.sendStatus(400);
+    }
+
+    res.render('create', { model: match, priorities });
 });
 
 app.post('/create',function(req: Request, res:Response){
+    const id: string = req.body.id;
     const taskText: string = req.body.taskText;
-    const newTask: Task = new Task(taskText, Priority.Low, new Date());
-    tasksList.push(newTask);
+    const priority: Priority = req.body.priority;
+
+    if(!taskText || !(priority in Priority)){
+        return res.sendStatus(400);
+    }
+
+    if(id){
+        const task = tasksList.find(x => x.id === id);
+
+        if(!task){
+            return res.sendStatus(400);
+        } else {
+            task.text = taskText;
+            task.priority = priority;
+        }
+    } else {
+        const newTask: Task = new Task(taskText, priority, new Date());
+        tasksList.push(newTask);
+    }
+    
     res.status(201);
     res.redirect("/");
 });
