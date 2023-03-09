@@ -35,6 +35,13 @@ app.post('/tasks', (req: Request, res: Response) => {
     res.render('index', { tasksList: sortedTasks });
 })
 
+app.put('/tasks/:id', (req: Request, res: Response) => {
+    const taskId: string = req.params.id;
+    const newText: string = req.body.newText;
+    tasksList[taskId].text = newText;
+    res.redirect('/');
+  });
+
 app.post('/create', function (req: Request, res: Response) {
     const taskText: string = req.body.taskText;
     const priority: string = Priority[req.body.priority];

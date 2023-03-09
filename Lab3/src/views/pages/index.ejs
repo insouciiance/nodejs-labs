@@ -28,9 +28,28 @@
         });
     }
 
-
     function tickElement(index) {
       axios.post('/tickTask', { index })
+        .then(response => {
+          console.log("Array updated successfully!");
+        })
+        .catch(error => {
+          console.error("Error updating array!", error);
+        })
+        .finally(res => {
+          window.location.href = "/";
+        });
+    }
+
+    function openEditModal(taskId) {
+      const modal = document.getElementById(`edit-modal-${taskId}`);
+      modal.style.display = 'block';
+    }
+
+    function updateElement(id) {
+      const newText = document.getElementById(`newText-${id}`).value;
+      console.log('here', newText)
+      axios.put(`/tasks/${id}`, { newText })
         .then(response => {
           console.log("Array updated successfully!");
         })
@@ -78,6 +97,13 @@
                 <button class="deleteButton" onclick="deleteElement(<%- i %>)">Видалити</button>
                 <input type="checkbox" onchange="tickElement(<%- i %>)" <%=tasksList[i].isDone ? "checked" : "" %> />
               </div>
+              <div id="edit-modal-<%= i %>" style="display:none;">
+                <form>
+                  <input type="text" id="newText-<%= i %>" value="<%= tasksList[i].text %>">
+                  <button onclick="updateElement(<%- i %>)">Зберегти</button>
+                </form>
+              </div>
+              <button onclick="openEditModal(<%= i %>)">Редагувати</button>
             </li>
             <% } %>
               <% } else{%>
