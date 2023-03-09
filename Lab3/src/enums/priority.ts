@@ -5,7 +5,7 @@ export enum Priority{
 }
 
 export const priorities = [
-    { name: 'Низький', value: Priority.Low },
-    { name: 'Середній', value: Priority.Medium },
-    { name: 'Високий', value: Priority.High }
+    { name: 'Низький', value: 0 },
+    { name: 'Середній', value: 1 },
+    { name: 'Високий', value: 2 }
 ]

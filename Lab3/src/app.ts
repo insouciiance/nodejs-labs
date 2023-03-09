@@ -69,20 +69,21 @@ app.post('/create',function(req: Request, res:Response){
 });
 
 app.post('/deleteTask', (req: Request, res: Response) => {
-    const { index } = req.body;
+    const { id } = req.body;
+    const index: number = tasksList.findIndex(item => item.id === id) 
     tasksList.splice(index, 1);
     res.sendStatus(200);
   });
 
 app.post('/tickTask', (req: Request, res: Response) => {
-    const { index } = req.body;
+    const { id } = req.body;
+    const index: number = tasksList.findIndex(item => item.id === id) 
     const task =  tasksList[index];
     task.isDone = !task.isDone;
+    tasksList[index] = task;
     res.sendStatus(200);
   });
 
 app.listen(8080, () =>{
     console.log("Server is listening on port 8080" )
-    const task1 = new Task('Text of the task', Priority.Low, new Date())
-    console.log(task1.getInfo())
 })
