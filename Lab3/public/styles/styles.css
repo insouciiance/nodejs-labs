@@ -42,3 +42,17 @@ select:hover {
     background-color: rgb(240, 240, 240);
     transition: 0.3s ease;
 }
+
+.navbar {
+    display: flex;
+}
+
+.navItem {
+    margin: .5rem;
+    padding: .5rem;
+    font-weight: 600;
+}
+
+.navItem a {
+    text-decoration: none;
+}
