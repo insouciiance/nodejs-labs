@@ -16,9 +16,11 @@ export class Tag {
     get name(): string {
         return this._name;
     }
+
     set name(value: string) {
         this._name = value
     }
+    
     getInfo(): string {
         return "Id: " + this._id + " Name: " + this._name;  
     }
