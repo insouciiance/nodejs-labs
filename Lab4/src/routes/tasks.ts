@@ -25,32 +25,22 @@ tasks.get('/tasks/:id', function (req: Request, res: Response) {
 
 tasks.post('/tasks', function (req: Request, res: Response) {
     const taskName: string = req.body.name;
-    let taskDiscription: string = req.body.discription;
-    let taskDeadline: Date = req.body.deadline;
+    const taskDiscription: string = req.body.discription ?? "";
+    const taskDeadline: Date = req.body.deadline ?? new Date();
     const taskTagIds: string[] = req.body.tagIds;
     if (!taskName) {
-        console.log(req.body);
         return res.sendStatus(400);
     }
-    if (!taskDiscription) {
-        taskDiscription = "";
-    }
-    if (!taskDeadline) {
-        taskDeadline = new Date();
-    }
-    else if (taskDeadline <= START_DATE || taskDeadline >= END_DATE) {
-        console.log("here2");
+    if (taskDeadline <= START_DATE || taskDeadline >= END_DATE) {
         return res.sendStatus(400);
     }
     const newTask: Task = new Task(taskName, taskDiscription, taskDeadline);
     if (taskTagIds) {
         if (taskTagIds.length !== new Set(taskTagIds).size) {
-            console.log("here3");
             return res.sendStatus(400);
         }
         taskTagIds.forEach(id => {
             if (!tagsList.find(tag => tag.id === id)) {
-                console.log("here4");
                 return res.sendStatus(400);
             }
             newTask.addTag(id);
