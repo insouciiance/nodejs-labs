@@ -2,6 +2,7 @@ import express, {Express} from 'express';
 import bodyParser from 'body-parser';
 import { tags } from './routes/tags';
 import { tasks } from './routes/tasks';
+import { projects } from './routes/projects';
 const swaggerJsdoc = require("swagger-jsdoc"),
 swaggerUi = require("swagger-ui-express");
 
@@ -12,6 +13,7 @@ app.use(bodyParser.json());
 
 app.use(tags);
 app.use(tasks);
+app.use(projects);
 
 const options = {
     definition: {
