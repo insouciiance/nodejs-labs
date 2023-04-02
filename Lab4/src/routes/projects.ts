@@ -5,7 +5,12 @@ import { Project } from '../entities/project';
 export const projects = express.Router();
 
 projects.get('/projects', function (req: Request, res: Response) {
-    res.send(projectsList);
+    const pageNumber: number = Number(req.query.page) || 1;
+    const itemsPerPage: number = Number(req.query.items_per_page) || 10;
+    const startIndex: number = (pageNumber - 1) * itemsPerPage;
+    const endIndex: number = startIndex + itemsPerPage;
+    const projects = projectsList.slice(startIndex, endIndex);
+    res.send(projects);
 });
 
 projects.get('/projects/:id', function (req: Request, res: Response) {
