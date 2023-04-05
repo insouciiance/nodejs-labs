@@ -12,7 +12,7 @@ tags.get('/tags/:id', function (req: Request, res: Response) {
     const tag = tagsList.find(x => x.id === req.params.id);
 
     if (!tag) {
-        return res.sendStatus(400);
+        return res.sendStatus(404);
     }
 
     res.send(tag);
@@ -37,9 +37,12 @@ tags.patch('/tags/:id', (req: Request, res: Response) => {
     const id: string = req.params.id;
     const newName: string = req.body.name;
     const index: number = tagsList.findIndex(item => item.id === id)
-    if (index === -1) return res.sendStatus(404);
-    tagsList[index].name = newName;
-    res.sendStatus(200);
+    if (index === -1)
+        return res.sendStatus(404);
+
+    const updated = tagsList[index];
+    updated.name = newName;
+    res.send(updated);
 });
 
 tags.delete('/tags/:id', (req: Request, res: Response) => {
@@ -47,5 +50,5 @@ tags.delete('/tags/:id', (req: Request, res: Response) => {
     const index: number = tagsList.findIndex(item => item.id === id)
     if (index === -1) return res.sendStatus(404);
     tagsList.splice(index, 1);
-    res.sendStatus(200);
+    res.sendStatus(204);
 });

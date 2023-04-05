@@ -17,7 +17,7 @@ projects.get('/projects/:id', function (req: Request, res: Response) {
     const project = projectsList.find(p => p.id === req.params.id);
 
     if (!project) {
-        return res.sendStatus(400);
+        return res.sendStatus(404);
     }
 
     res.send(project);
@@ -74,9 +74,10 @@ projects.patch('/projects/:id', (req: Request, res: Response) => {
         });
     }
 
-    projectsList[index].name = newName ? newName : projectsList[index].name;
-    projectsList[index].taskIds = newTaskIds ? newTaskIds : projectsList[index].taskIds;
-    res.sendStatus(200);
+    const updated = projectsList[index];
+    updated.name = newName ? newName : projectsList[index].name;
+    updated.taskIds = newTaskIds ? newTaskIds : projectsList[index].taskIds;
+    res.send(updated);
 });
 
 projects.delete('/projects/:id', (req: Request, res: Response) => {
@@ -84,5 +85,5 @@ projects.delete('/projects/:id', (req: Request, res: Response) => {
     const index: number = tasksList.findIndex(t => t.id === id)
     if (index === -1) return res.sendStatus(404);
     tasksList.splice(index, 1);
-    res.sendStatus(200);
+    res.sendStatus(204);
 });
