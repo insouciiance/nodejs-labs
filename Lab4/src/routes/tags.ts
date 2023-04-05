@@ -8,7 +8,6 @@ tags.get('/tags', function (req: Request, res: Response) {
     res.send(tags);
 });
 
-
 tags.get('/tags/:id', function (req: Request, res: Response) {
     const tag = tagsList.find(x => x.id === req.params.id);
 
@@ -34,7 +33,7 @@ tags.post('/tags', function (req: Request, res: Response) {
     res.sendStatus(201);
 });
 
-tags.put('/tags/:id', (req: Request, res: Response) => {
+tags.patch('/tags/:id', (req: Request, res: Response) => {
     const id: string = req.params.id;
     const newName: string = req.body.name;
     const index: number = tagsList.findIndex(item => item.id === id)

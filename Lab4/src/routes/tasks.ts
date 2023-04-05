@@ -29,12 +29,11 @@ tasks.get('/tasks', function (req: Request, res: Response) {
     res.send(tasks);
 });
 
-
 tasks.get('/tasks/:id', function (req: Request, res: Response) {
     const task = tasksList.find(t => t.id === req.params.id);
 
     if (!task) {
-        return res.sendStatus(400);
+        return res.sendStatus(404);
     }
 
     res.send(task);
@@ -67,7 +66,7 @@ tasks.post('/tasks', function (req: Request, res: Response) {
     res.sendStatus(201);
 });
 
-tasks.put('/tasks/:id', (req: Request, res: Response) => {
+tasks.patch('/tasks/:id', (req: Request, res: Response) => {
     const id: string = req.params.id;
     const newName: string = req.body.name;
     const newDiscription: string = req.body.discription;
@@ -88,11 +87,14 @@ tasks.put('/tasks/:id', (req: Request, res: Response) => {
             }
         });
     }
-    tasksList[index].name = newName? newName : tasksList[index].name;
-    tasksList[index].discription = newDiscription? newDiscription : tasksList[index].discription;
-    tasksList[index].deadline = newDeadline? newDeadline : tasksList[index].deadline;
-    tasksList[index].tagIds = newTagIds? newTagIds : tasksList[index].tagIds;
-    res.sendStatus(200);
+
+    const updated = tasksList[index];
+
+    updated.name = newName? newName : tasksList[index].name;
+    updated.description = newDiscription? newDiscription : tasksList[index].description;
+    updated.deadline = newDeadline? newDeadline : tasksList[index].deadline;
+    updated.tagIds = newTagIds? newTagIds : tasksList[index].tagIds;
+    res.send(updated);
 });
 
 tasks.delete('/tasks/:id', (req: Request, res: Response) => {
@@ -100,5 +102,5 @@ tasks.delete('/tasks/:id', (req: Request, res: Response) => {
     const index: number = tasksList.findIndex(t => t.id === id)
     if (index === -1) return res.sendStatus(404);
     tasksList.splice(index, 1);
-    res.sendStatus(200);
+    res.sendStatus(204);
 });

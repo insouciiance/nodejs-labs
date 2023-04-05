@@ -3,8 +3,8 @@ import bodyParser from 'body-parser';
 import { tags } from './routes/tags';
 import { tasks } from './routes/tasks';
 import { projects } from './routes/projects';
-const swaggerJsdoc = require("swagger-jsdoc"),
-swaggerUi = require("swagger-ui-express");
+import swaggerJsDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 const app: Express = express()
 
@@ -26,12 +26,7 @@ const options = {
         license: {
           name: "MIT",
           url: "https://spdx.org/licenses/MIT.html",
-        },
-        contact: {
-          name: "Valide",
-          url: "https://t.me/MrRicard0",
-          email: "valide.baget@gmail.com",
-        },
+        }
       },
       servers: [
         {
@@ -39,15 +34,15 @@ const options = {
         },
       ],
     },
-    apis: ["./routes/*.js"],
+    apis: ["./src/swagger/*/*.ts"],
   };
   
-  const specs = swaggerJsdoc(options);
-  app.use(
-    "/api-docs",
-    swaggerUi.serve,
-    swaggerUi.setup(specs)
-  );
+const specs = swaggerJsDoc(options);
+app.use(
+  "/swagger",
+  swaggerUi.serve,
+  swaggerUi.setup(specs)
+);
 
 app.listen(8080, () =>{
     console.log("Server is listening on port 8080" )

@@ -1,41 +1,21 @@
 import crypto from 'crypto';
 
 export class Project {
-    private _id: string;
-    private _name: string;
-    private _taskIds: string[];
+    public id: string;
+    public name: string;
+    public taskIds: string[];
 
     constructor(name: string) {
-        this._id = crypto.randomUUID();
+        this.id = crypto.randomUUID();
         this.name = name;
-        this._taskIds = [];
-    }
-
-    get id(): string {
-        return this._id;
-    }
-
-    get name(): string {
-        return this._name;
-    }
-
-    set name(value: string) {
-        this._name = value;
-    }
-
-    get taskIds(): string[] {
-        return this._taskIds;
-    }
-
-    set taskIds(value: string[]) {
-        this._taskIds = value;
+        this.taskIds = [];
     }
 
     addTask(taskId: string) {
-        this._taskIds.push(taskId);
+        this.taskIds.push(taskId);
     }
 
     removeTask(taskId: string) {
-        this._taskIds = this._taskIds.filter(id => id != taskId);
+        this.taskIds = this.taskIds.filter(id => id != taskId);
     }
 }

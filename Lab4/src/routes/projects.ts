@@ -53,7 +53,7 @@ projects.post('/projects', function (req: Request, res: Response) {
     res.sendStatus(201);
 });
 
-projects.put('/projects/:id', (req: Request, res: Response) => {
+projects.patch('/projects/:id', (req: Request, res: Response) => {
     const id: string = req.params.id;
     const newName: string = req.body.name;
     const newTaskIds: string[] = req.body.tagIds;
