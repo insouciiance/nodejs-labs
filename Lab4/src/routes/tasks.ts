@@ -8,7 +8,24 @@ const START_DATE = new Date("2000-01-01");
 const END_DATE = new Date("2100-01-01");
 
 tasks.get('/tasks', function (req: Request, res: Response) {
-    const tasks = [...tasksList];
+    let tasks = [...tasksList];
+
+    if (req.query)
+    {
+        tasks = tasks.filter(t => {
+            for (const prop in req.query)
+            {
+                if (t[prop] === undefined)
+                    return false;
+
+                if (t[prop] !== req.query[prop])
+                    return false;
+            }
+
+            return true;
+        });
+    }
+
     res.send(tasks);
 });
 
