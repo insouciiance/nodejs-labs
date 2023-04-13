@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
-import { tags } from './routes/tags';
+// import { tags } from './routes/tags';
 import { tasks } from './routes/tasks';
 import { projects } from './routes/projects';
 
@@ -22,7 +22,7 @@ mongoose
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(tags);
+// app.use(tags);
 app.use(tasks);
 app.use(projects);
 
