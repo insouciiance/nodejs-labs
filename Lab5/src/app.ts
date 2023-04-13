@@ -9,12 +9,13 @@ import { tags } from './routes/tags';
 import { tasks } from './routes/tasks';
 import { projects } from './routes/projects';
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 const app: Express = express()
 
-const connectionString = 'mongodb+srv://sa:Qwerty123@todos.pekdfja.mongodb.net/ToDos?retryWrites=true&w=majority'
-
 mongoose
-  .connect(connectionString)
+  .connect(process.env.CONNECTION_STRING)
   .then((res) => console.log('Connected to db'))
   .catch((error) =>console.log(error))
 
@@ -54,6 +55,6 @@ app.use(
   swaggerUi.setup(specs)
 );
 
-app.listen(8080, () => {
-  console.log("Server is listening on port 8080")
+app.listen(process.env.PORT, () => {
+  console.log("Server is listening on port " + process.env.PORT)
 })
