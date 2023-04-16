@@ -16,11 +16,11 @@
  *           description: The name of your task
  *         discription:
  *           type: string
- *           description: The task's description
+ *           description: The task"s description
  *         deadline:
  *           type: string
  *           format: date
- *           description: The task's deadline
+ *           description: The task"s deadline
  *         tagIds:
  *           type: string[]
  *           description: The list of tags associated with this task

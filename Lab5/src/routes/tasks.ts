@@ -1,23 +1,23 @@
-import express, { Request, Response } from 'express';
-import { ObjectId } from 'mongodb';
-const Task = require('../models/task');
-const Project = require('../models/project');
+import express, { Request, Response } from "express";
+import { ObjectId } from "mongodb";
+import Task from "../models/task";
+import Project from "../models/project";
 
 export const tasks = express.Router();
 
 const START_DATE = new Date("2000-01-01");
 const END_DATE = new Date("2100-01-01");
 
-tasks.get('/tasks', async function (req: Request, res: Response) {
+tasks.get("/tasks", async function (req: Request, res: Response) {
     try {
-        const projects = await Task.find(req.query);
-        res.json(projects);
+        const tasks = await Task.find(req.query);
+        res.json(tasks);
       } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(500).json({ message: "Internal Server Error" });
       }
 });
 
-tasks.get('/tasks/:id', async function (req: Request, res: Response) {
+tasks.get("/tasks/:id", async function (req: Request, res: Response) {
     const project = await Task.findById(req.params.id)
     if (!project) {
         return res.status(404);
@@ -25,7 +25,7 @@ tasks.get('/tasks/:id', async function (req: Request, res: Response) {
     res.send(project);
 });
 
-tasks.post('/tasks', async function (req: Request, res: Response) {
+tasks.post("/tasks", async function (req: Request, res: Response) {
     const taskName: string = req.body.name;
     const taskDeadline: Date = req.body.deadline ?? new Date();
     const projectId: ObjectId = req.body.project;
@@ -58,7 +58,7 @@ tasks.post('/tasks', async function (req: Request, res: Response) {
     res.json(newTask);
 });
 
-tasks.patch('/tasks/:id', async ( req: Request, res: Response) => {
+tasks.patch("/tasks/:id", async ( req: Request, res: Response) => {
     try {
         const task = await Task.findById(req.params.id);
 
@@ -91,16 +91,16 @@ tasks.patch('/tasks/:id', async ( req: Request, res: Response) => {
     }
 });
 
-tasks.delete('/tasks/:id', async (req: Request, res: Response) => {
+tasks.delete("/tasks/:id", async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const deletedTask = await Task.findByIdAndDelete(id);
         if (!deletedTask) {
-            return res.status(404).json({ message: 'Task not found' });
+            return res.status(404).json({ message: "Task not found" });
         }
-        res.json({ message: 'Task deleted successfully', deletedTask });
+        res.json({ message: "Task deleted successfully", deletedTask });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        res.status(500).json({ message: "Internal Server Error" });
     }
 });

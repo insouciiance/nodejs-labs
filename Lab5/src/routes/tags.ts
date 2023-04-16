@@ -1,54 +1,82 @@
-// import express, { Request, Response } from 'express';
-// import { tagsList } from '../storage/data';
-// import { Tag } from '../entities/tag';
-// export const tags = express.Router();
+import express, { Request, Response } from "express";
+import Tag from "../models/tag";
+import Task from "../models/task";
 
-// tags.get('/tags', function (req: Request, res: Response) {
-//     const tags = [...tagsList];
-//     res.send(tags);
-// });
+export const tags = express.Router();
 
-// tags.get('/tags/:id', function (req: Request, res: Response) {
-//     const tag = tagsList.find(x => x.id === req.params.id);
+tags.get("/tags", async function (req: Request, res: Response) {
+  try {
+    const tags = await Tag.find(req.query);
+    res.json(tags);
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
-//     if (!tag) {
-//         return res.sendStatus(404);
-//     }
+tags.get("/tags/:id", async function (req: Request, res: Response) {
+  const tag = await Tag.findById(req.params.id);
 
-//     res.send(tag);
-// });
+  if (!tag) {
+    return res.sendStatus(404);
+  }
 
-// tags.post('/tags', function (req: Request, res: Response) {
-//     const tagName: string = req.body.name;
+  res.send(tag);
+});
 
-//     if (!tagName) {
-//         return res.sendStatus(400);
-//     }
+tags.post("/tags", async function (req: Request, res: Response) {
+  const tagName: string = req.body.name;
 
-//     const checkName = tagsList.find(t => t.name === tagName)
-//     if (checkName) return res.sendStatus(409);
-//     const newTask: Tag = new Tag(tagName);
-//     tagsList.push(newTask);
+  if (!tagName)
+    return res.sendStatus(400);
 
-//     res.sendStatus(201);
-// });
+  const taskIds = req.body.tasks ?? [];
 
-// tags.patch('/tags/:id', (req: Request, res: Response) => {
-//     const id: string = req.params.id;
-//     const newName: string = req.body.name;
-//     const index: number = tagsList.findIndex(item => item.id === id)
-//     if (index === -1)
-//         return res.sendStatus(404);
+  try {
+    const tasks = await Task.find({ _id: { $in: taskIds } });
 
-//     const updated = tagsList[index];
-//     updated.name = newName;
-//     res.send(updated);
-// });
+    if (tasks.length !== taskIds.length)
+      return res.status(400).json({ message: "Invalid task IDs" });
 
-// tags.delete('/tags/:id', (req: Request, res: Response) => {
-//     const id = req.params.id;
-//     const index: number = tagsList.findIndex(item => item.id === id)
-//     if (index === -1) return res.sendStatus(404);
-//     tagsList.splice(index, 1);
-//     res.sendStatus(204);
-// });
+    } catch (e) {
+    res.status(500).json({ "Internal server error": e })
+  }
+
+  const checkName = await Tag.findOne({ name: { $eq: tagName } })
+
+  console.log(checkName);
+
+  if (checkName)
+    return res.sendStatus(409);
+  
+  const newTag = new Tag({
+      name: tagName,
+      tasks: taskIds
+  });
+
+  await newTag.save();
+  res.send(newTag);
+});
+
+tags.patch("/tags/:id", async (req: Request, res: Response) => {
+  const id: string = req.params.id;
+  const newName: string = req.body.name;
+
+  const existingTag = await Tag.findById(id);
+  
+  if (!existingTag)
+    return res.sendStatus(404);
+
+  existingTag.name = newName;
+  await existingTag.save();
+  res.send(existingTag);
+});
+
+tags.delete("/tags/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const deletedTag = await Tag.findByIdAndDelete(id);
+
+  if (!deletedTag)
+    return res.sendStatus(404);
+
+  res.sendStatus(204);
+});

@@ -18,7 +18,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Project'
+ *             $ref: "#/components/schemas/Project"
  *     responses:
  *       201:
  *         description: The project was created.
@@ -57,14 +57,14 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Project'
+ *             $ref: "#/components/schemas/Project"
  *     responses:
  *       200:
  *         description: The project was updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Project'
+ *               $ref: "#/components/schemas/Project"
  *       400:
  *         description: The provided data for the project was invalid
  *       404:

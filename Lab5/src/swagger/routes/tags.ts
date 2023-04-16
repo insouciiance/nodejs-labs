@@ -18,7 +18,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Tag'
+ *             $ref: "#/components/schemas/Tag"
  *     responses:
  *       201:
  *         description: The tag was created.
@@ -57,14 +57,14 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Tag'
+ *             $ref: "#/components/schemas/Tag"
  *     responses:
  *       200:
  *         description: The tag was updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Tag'
+ *               $ref: "#/components/schemas/Tag"
  *       400:
  *         description: The provided data for the tag was invalid
  *       404:

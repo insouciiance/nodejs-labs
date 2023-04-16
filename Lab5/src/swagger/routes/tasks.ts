@@ -18,7 +18,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Task'
+ *             $ref: "#/components/schemas/Task"
  *     responses:
  *       201:
  *         description: The task was created.
@@ -57,14 +57,14 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Task'
+ *             $ref: "#/components/schemas/Task"
  *     responses:
  *       200:
  *         description: The task was updated
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Task'
+ *               $ref: "#/components/schemas/Task"
  *       400:
  *         description: The provided data for the task was invalid
  *       404:
