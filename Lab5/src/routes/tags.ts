@@ -2,20 +2,22 @@ import express, { Request, Response } from "express";
 import Tag from "../models/tag";
 import Task from "../models/task";
 import TaskToTag from "../models/tasksToTags";
-import tasksToTags from "../models/tasksToTags";
+import TagDto from "../dtos/tagDto";
 
 export const tags = express.Router();
 
 tags.get("/tags", async function (req: Request, res: Response) {
   try {
     const tags = await Tag.find(req.query);
+    const tagDtos = [];
 
     for(const tag of tags) {
-      const tasks = (await TaskToTag.find({ tagId: { $eq: tag._id } })).map(e => e.taskId);
-      tag["_doc"]["tasks"] = tasks;
+      const taskDocs = await TaskToTag.find({ tagId: { $eq: tag._id } });
+      const tasks = taskDocs.map(e => e.taskId);
+      tagDtos.push(new TagDto(tag.id, tag.name, tasks));
     }
 
-    res.json(tags);
+    res.json(tagDtos);
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -23,12 +25,13 @@ tags.get("/tags", async function (req: Request, res: Response) {
 
 tags.get("/tags/:id", async function (req: Request, res: Response) {
   const tag = await Tag.findById(req.params.id);
-  tag["_doc"]["tasks"] = (await TaskToTag.find({ tagId: { $eq: tag._id } })).map(e => e.taskId)
+  const taskIds = (await TaskToTag.find({ tagId: { $eq: tag._id } })).map(e => e.taskId);
+  const tagDto = new TagDto(tag.id, tag.name, taskIds);
 
   if (!tag)
     return res.sendStatus(404);
 
-  res.send(tag);
+  res.send(tagDto);
 });
 
 tags.post("/tags", async function (req: Request, res: Response) {
@@ -69,7 +72,9 @@ tags.post("/tags", async function (req: Request, res: Response) {
     newTaskToTag.save();
   }
 
-  res.send(newTag);
+  const newTagDto = new TagDto(newTag.id, newTag.name, taskIds);
+
+  res.send(newTagDto);
 });
 
 tags.patch("/tags/:id", async (req: Request, res: Response) => {
@@ -83,6 +88,7 @@ tags.patch("/tags/:id", async (req: Request, res: Response) => {
 
   existingTag.name = newName;
   await existingTag.save();
+
   res.send(existingTag);
 });
 
