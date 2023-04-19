@@ -5,6 +5,7 @@ import Task from "../models/task";
 import Project from "../models/project";
 import TaskToTag from "../models/tasksToTags";
 import TaskDto from "../dtos/taskDto";
+import { getOrSetCache } from "../redis/redis";
 
 export const tasks = express.Router();
 
@@ -13,7 +14,9 @@ const END_DATE = new Date("2100-01-01");
 
 tasks.get("/tasks", async function (req: Request, res: Response) {
     try {
-        const tasks = await Task.find(req.query);
+        const tasks: any = await getOrSetCache('tasks', async () => {
+            return await Task.find(req.query);
+        });
 
         const taskDtos = [];
 
@@ -30,15 +33,21 @@ tasks.get("/tasks", async function (req: Request, res: Response) {
 });
 
 tasks.get("/tasks/:id", async function (req: Request, res: Response) {
-    const task = await Task.findById(req.params.id)
+    try {
+        const task: any = await getOrSetCache(`tasks:id=${req.params.id}`, async () => {
+            return await Task.findById(req.params.id)
+        });
 
-    if (!task)
-        return res.status(404);
-
-    const tagIds = (await TaskToTag.find({ taskId: { $eq: task._id } })).map(e => e.tagId);
-    const taskDto = new TaskDto(task.id, task.name, task.description, task.project, tagIds);
-
-    res.send(taskDto);
+        if (!task)
+            return res.status(404);
+    
+        const tagIds = (await TaskToTag.find({ taskId: { $eq: task._id } })).map(e => e.tagId);
+        const taskDto = new TaskDto(task.id, task.name, task.description, task.project, tagIds);
+    
+        res.send(taskDto);
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" });
+    }
 });
 
 tasks.post("/tasks", async function (req: Request, res: Response) {

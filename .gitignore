@@ -105,3 +105,6 @@ dist
 
 # News
 /Lab2/news
+
+#redis rbd files
+*.rdb

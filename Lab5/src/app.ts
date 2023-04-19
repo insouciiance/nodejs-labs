@@ -5,6 +5,8 @@ import mongoose from "mongoose";
 import swaggerJsDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
 
+import { Redis } from 'ioredis';
+
 import { tags } from "./routes/tags";
 import { tasks } from "./routes/tasks";
 import { projects } from "./routes/projects";
@@ -12,12 +14,14 @@ import { projects } from "./routes/projects";
 import dotenv from "dotenv";
 dotenv.config();
 
-const app: Express = express()
+const app: Express = express();
 
 mongoose
   .connect(process.env.CONNECTION_STRING)
   .then((res) => console.log("Connected to db"))
-  .catch((error) =>console.log(error))
+  .catch((error) =>console.log(error));
+
+export const redisClient = Redis.createClient();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
